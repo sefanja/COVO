@@ -1,4 +1,3 @@
-
 # Constraints
 
 We represent a business capability model $M$ as a relational structure $M = (E, R)$, where:
@@ -8,9 +7,9 @@ We represent a business capability model $M$ as a relational structure $M = (E, 
   * $O$ is a set of value object types
   * $S$ is a set of value streams
 * $R \subseteq E \times E$ is the set of binary relations $V \cup H$, such that:
-  * $V \subseteq C \times C \cup O \times O \cup S \times S$ is the set of vertical relations $\{ \texttt{isRefinedBy} \}$, where:
+  * $V \subseteq C \times C \cup O \times O \cup S \times S$ is the set of vertical relations $\\{ \texttt{isRefinedBy} \\}$, where:
     * $\texttt{isRefinedBy}$ denotes the _has subcapability_, _has subdomain_, and _has stage_ relations
-  * $H = R \setminus V$ is the set of horizontal relations $\{ \texttt{affects}, \texttt{enablesWithCoManifestation}, \texttt{enablesWithoutCoManifestation}, \texttt{isBasedOn}, \texttt{isPrincipalOf}, \texttt{canTransform} \}$, where:
+  * $H = R \setminus V$ is the set of horizontal relations $\\{ \texttt{affects}, \texttt{enablesWithCoManifestation}, \texttt{enablesWithoutCoManifestation}, \texttt{isBasedOn}, \texttt{isPrincipalOf}, \texttt{canTransform} \\}$, where:
     * $\texttt{affects} \subseteq S \times S$ denotes the _affects_ relationship
     * $\texttt{enablesWithCoManifestation} \subseteq C \times C$ denotes the _enablement_ relator where co-manifestation is true
     * $\texttt{enablesWithoutCoManifestation} \subseteq C \times C$ denotes the _enablement_ relator where co-manifestation is false
