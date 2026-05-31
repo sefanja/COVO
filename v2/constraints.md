@@ -95,8 +95,6 @@ A relationship between two parent elements requires that at least one pair of th
 
 Each capability must be the potential to transform exactly one object. _Exception:_ At the leaf-level, a capability may transform multiple objects. _Rationale:_ This ensures that every capability has a well-defined, non-overlapping impact on value creation. The exception prevents artificial fragmentation of what the business considers a single cohesive capability.
 
-∀c∈C:(¬isLeaf(c)→∃!o∈O:canTransform(c,o))∧(isLeaf(c)→∃o∈O:canTransform(c,o))
-
 > $$
 > \begin{aligned}
 > & \forall c \in C : \\
@@ -108,8 +106,6 @@ Each capability must be the potential to transform exactly one object. _Exceptio
 ### C7. Object relevance
 
 Each object must be transformed by exactly one capability. _Exception:_ At the leaf-level, an object may be transformed by multiple capabilities. _Rationale:_ This ensures clear relevancy and accountability for the object in value-creating activities. The exception prioritizes the conceptual stability of objects as recognized by stakeholders. It avoids the need to decompose a familiar object into numerous, fine-grained lifecycle states (e.g., 'Submitted Order', 'Validated Order'), which would compromise the model's readability.
-
-∀o∈O:(¬isLeaf(o)→∃!c∈C:canTransform(c,o))∧(isLeaf(o)→∃c∈C:canTransform(c,o))
 
 > $$
 > \begin{aligned}
@@ -130,8 +126,6 @@ Each capability must either manifest as a principal capability in a value stream
 ### C9. Traceability
 
 Each value stream must manifest exactly one principal capability. _Rationale:_ This constraint ensures traceability and governability. It establishes a clear, unambiguous link from value-creating action back to the accountable capability.
-
-∀s∈S:∃!c∈C:isPrincipalOf(c,s)
 
 > $$
 > \forall s \in S \; \exists! c \in C : \texttt{isPrincipalOf}(c, s)
