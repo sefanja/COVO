@@ -8,9 +8,11 @@ These constraints are implemented in the open-source [COVO Validator](https://gi
 
 ## Ontological Foundation
 
-The constraints are defined with respect to the core elements and relationships depicted in the OntoUML diagram:
+The constraints are defined with respect to the core elements (`Capability`, `Value Object Type`, `Value Stream`) and their relationships depicted in the OntoUML diagram:
 
 ![COVO in OntoUML](diagrams/COVO.svg)
+
+In essence, the model represents that an `Organization` manifests its `Capabilities` through `Value Streams`, which transform `Value Objects` to satisfy `Value Commitments` to `Stakeholders`.
 
 ## Definitions
 
@@ -107,7 +109,7 @@ A relationship between two parent elements requires that at least one pair of th
 
 ## Cross-perspective alignment (C6-10)
 
-These constraints ensure that the three perspectives (capability, object, value stream) remain aligned, forming the coherent triad.
+These constraints ensure that the three perspectives (capability, object, value stream) remain aligned, forming a coherent triad.
 
 ### C6. Capability impact
 
