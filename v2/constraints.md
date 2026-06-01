@@ -63,7 +63,7 @@ A non-hierarchical relationship between two elements requires a corresponding re
 1. it is a relationship between objects (as structural propagation is handled implicitly via rules C11-12);
 2. the parent elements are both principal capabilities within the same top-level value stream (to prevent redundant propagation of _enables_ relationships to higher levels);
 3. propagation would introduce an _affects_ or _enables_ cycle (to maintain a forward, value-directed path); or
-4. propagation would introduce a redundant _affects_ path (e.g., an edge A$\rightarrow$C that is already implied by reachability via A$\rightarrow$B$\rightarrow$C, allowing for compact models).
+4. propagation would introduce a redundant _affects_ path (e.g., an edge $A \rightarrow C$ that is already implied by reachability via $A \rightarrow B \rightarrow C$, allowing for compact models).
 
 _Rationale:_ This ensures that low-level relationships are reflected at higher levels of abstraction. The exception allows lower-level support relations to remain implicit at higher levels. This aligns with the principle that value streams represent simplified views of value creation rather than detailed process models.
 
