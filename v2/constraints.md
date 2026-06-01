@@ -1,8 +1,6 @@
 # Constraints
 
-*Note: These constraints only deal with COVO's `Value Object Type`, not its instance (`Value Object`). For readability, this document simply uses the term 'value object' (or just 'object') to refer to its type. This aligns with enterprise modeling languages like ArchiMate, which do not distinguish between types and instances.*
-
-We represent a business capability model $M$ as a relational structure $M = (E, R)$, where:
+Based on the definition of COVO in OntoUML, we represent a business capability model $M$ as a relational structure $M = (E, R)$, where:
 
 * $E = S \cup C \cup O$ is a set of elements, such that:
   * $C$ is a set of _capabilities_
@@ -26,16 +24,20 @@ Furthermore:
 * Let $\texttt{depth}(e)$ be a function that yields the total number of ancestors of $e$.
 * Let $R^∗$ denote the reflexive transitive closure of a relation $R$, and $R^+$ denote the transitive closure (one or more steps).
 
+_Note: These constraints only deal with COVO's `Value Object Type`, not its instance (`Value Object`). For readability, this document simply uses the term 'value object' (or just 'object') to refer to its type. This aligns with enterprise modeling languages like ArchiMate, which do not distinguish between types and instances._
+
 For a model $M$ to be COVO-compliant, the following constraints must hold:
 
-## Hierarchical consistency
+## Hierarchical consistency (C1-5)
+
+These modeling constraints ensure that capabilities, objects and value streams are modeled in valid part-whole hierarchies that enable consistent zooming. We refer to elements in these hierarchies as parents, children, and ancestors. Note that hierarchical (or 'vertical') relations are only allowed between elements of the same type (e.g., not between capability and object).
 
 ### C1. Unique parent
 
 Each element has at most one parent. _Rationale:_ This ensures a single, unambiguous position for every element in the hierarchy.
 
 > $$
-> \forall e_1, e_2, e_3 \in E : \texttt{isRefinedBy}(e_2, e_1) \land \texttt{isRefinedBy}(e_3, e_1) \implies e_2 = e_3
+> \forall e, p_1, p_2 \in E : \texttt{isRefinedBy}(p_1, e) \land \texttt{isRefinedBy}(p_2, e) \implies p_1 = p_2
 > $$
 
 ### C2. Acyclicity
@@ -43,7 +45,7 @@ Each element has at most one parent. _Rationale:_ This ensures a single, unambig
 An element cannot be its own ancestor. _Rationale:_ This prevents ill-defined, circular refinement structures.
 
 > $$
-> \neg \exists e \in E : \texttt{isRefinedBy}^{+}(e, e)	
+> \neg \exists e \in E : \texttt{isRefinedBy}^{+}(e, e)
 > $$
 
 ### C3. Consistent refinement depth
@@ -67,11 +69,11 @@ _Rationale:_ This ensures that low-level relationships are reflected at higher l
 
 > $$
 > \begin{aligned}
->   & \forall e_1, e_2 \in E, R \in H \; \exists p : R(e_1, e_2) \land \big( \texttt{isRefinedBy}(p, e_1) \lor \texttt{isRefinedBy}(p, e_2) \big) \implies \\
->   & \exists p_1, p_2 : \texttt{isRefinedBy}(p_1, e_1) \land \texttt{isRefinedBy}(p_2, e_2) \land \big( p_1 = p_2 \lor R(p_1, p_2) \big) \lor {} \\
+>   & \forall e_1, e_2 \in E, h \in H \; \exists p : h(e_1, e_2) \land \big( \texttt{isRefinedBy}(p, e_1) \lor \texttt{isRefinedBy}(p, e_2) \big) \implies \\
+>   & \exists p_1, p_2 : \texttt{isRefinedBy}(p_1, e_1) \land \texttt{isRefinedBy}(p_2, e_2) \land \big( p_1 = p_2 \lor h(p_1, p_2) \big) \lor {} \\
 >   & \left\\{ \begin{aligned}
 >     {\scriptscriptstyle \texttt{(1) }} & e_1, e_2 \in O \\
->     {\scriptscriptstyle \texttt{(2) }} & \exists s_1, s_2, s \in S : \texttt{isPrincipalOf}(p_1, s_1) \land \texttt{isPrincipalOf}(p_2, s_2) \land \texttt{isRefinedBy}^{\*}(s, s_1) \land \texttt{isRefinedBy}^{\*}(s, s_2) \\
+>     {\scriptscriptstyle \texttt{(2) }} & \exists s_1, s_2, s_a \in S : \texttt{isPrincipalOf}(p_1, s_1) \land \texttt{isPrincipalOf}(p_2, s_2) \land \texttt{isRefinedBy}^{\*}(s_a, s_1) \land \texttt{isRefinedBy}^{\*}(s_a, s_2) \\
 >     {\scriptscriptstyle \texttt{(3) }} & \texttt{enables}^{+}(p_2, p_1) \lor \texttt{affects}^{+}(p_2, p_1) \\
 >     {\scriptscriptstyle \texttt{(4) }} & (\texttt{affects} \circ \texttt{affects}^{+})(p_1, p_2)
 >   \end{aligned} \right.
@@ -84,12 +86,14 @@ A relationship between two parent elements requires that at least one pair of th
 
 > $$
 > \begin{aligned}
->   & \forall e_1, e_2 \in E, R \in H : R(e_1, e_2) \land \big(\neg \texttt{isLeaf}(e_1) \lor \neg \texttt{isLeaf}(e_2)\big) \implies \\
->   & \exists c_1, c_2 \in E : \texttt{isRefinedBy}(e_1, c_1) \land \texttt{isRefinedBy}(e_2, c_2) \land R(c_1, c_2)
+>   & \forall e_1, e_2 \in E, h \in H : h(e_1, e_2) \land \big(\neg \texttt{isLeaf}(e_1) \lor \neg \texttt{isLeaf}(e_2)\big) \implies \\
+>   & \exists c_1, c_2 \in E : \texttt{isRefinedBy}(e_1, c_1) \land \texttt{isRefinedBy}(e_2, c_2) \land h(c_1, c_2)
 > \end{aligned}
 > $$
 
-## Cross-perspective alignment
+## Cross-perspective alignment (C6-10)
+
+These constraints ensure that the three perspectives (capability, object, value stream) remain aligned, forming the coherent triad.
 
 ### C6. Capability impact
 
@@ -138,11 +142,13 @@ Each capability may manifest only once per top-level value stream as a principal
 > $$
 > \begin{aligned}  
 > & \forall c \in C, s_1, s_2 \in S : \big( \neg \texttt{isLeaf}(c) \land \texttt{isPrincipalOf}(c, s_1) \land \texttt{isPrincipalOf}(c, s_2) \big) \implies \\
-> & \exists s \in S : \texttt{isRefinedBy}^{\*}(s, s_1) \land \texttt{isRefinedBy}^{\*}(s, s_2)  
+> & \exists s_a \in S : \texttt{isRefinedBy}^{\*}(s_a, s_1) \land \texttt{isRefinedBy}^{\*}(s_a, s_2)  
 > \end{aligned}
 > $$
 
-## Semantic symmetry
+## Semantic symmetry (C11-13)
+
+These modeling constraints implement the semantic symmetry principle: any behavioral dependency (between capabilities and/or value streams) must be mirrored by a structural dependency (between their corresponding objects).
 
 ### C11. Grounded value stream dependencies
 
@@ -150,8 +156,8 @@ Each _affects_ relationship between two value stream stages must have an _is bas
 
 > $$
 > \begin{aligned}
->   & \forall s_1, s_2 \in S : \texttt{affects}(s_1, s_2) \implies \\
->   & \exists o_1, o_2 \in O, c_1, c_2 \in C: \texttt{isPrincipalOf}(c_1, s_1) \land \texttt{isPrincipalOf}(c_2, s_2) \land {} \\
+>   & \forall s_1, s_2 \in S : \texttt{affects}(s_1, s_2) \implies \exists o_1, o_2 \in O, c_1, c_2 \in C : \\
+>   & \texttt{isPrincipalOf}(c_1, s_1) \land \texttt{isPrincipalOf}(c_2, s_2) \land {} \\
 >   & \texttt{canTransform}(c_1, o_1) \land \texttt{canTransform}(c_2, o_2) \land {} \\
 >   & (o_1 = o_2 \lor \texttt{isBasedOn}(o_2, o_1))
 > \end{aligned}
