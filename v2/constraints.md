@@ -11,7 +11,7 @@ We represent a business capability model $M$ as a relational structure $M = (E, 
 * $R \subseteq E \times E$ is the set of binary relations $V \cup H$, such that:
   * $V \subseteq C \times C \cup O \times O \cup S \times S$ is the set of vertical relations $\\{ \texttt{isRefinedBy} \\}$, where:
     * $\texttt{isRefinedBy}$ denotes the _has subcapability_, _has subdomain_, and _has stage_ relationships
-  * $H = R \setminus V$ is the set of horizontal relations $\\{ \texttt{affects}, \texttt{enablesWithCoManifestation}, \texttt{enablesWithoutCoManifestation}, \texttt{isBasedOn}, \texttt{isPrincipalOf}, \texttt{canTransform} \\}$, where:
+  * $H \subseteq R \setminus V$ is the set of horizontal relations $\\{ \texttt{affects}, \texttt{enablesWithCoManifestation}, \texttt{enablesWithoutCoManifestation}, \texttt{isBasedOn}, \texttt{isPrincipalOf}, \texttt{canTransform} \\}$, where:
     * $\texttt{affects} \subseteq S \times S$ denotes the _affects_ relationship
     * $\texttt{enablesWithCoManifestation} \subseteq C \times C$ denotes the _enablement_ relator where co-manifestation is true
     * $\texttt{enablesWithoutCoManifestation} \subseteq C \times C$ denotes the _enablement_ relator where co-manifestation is false
@@ -93,7 +93,7 @@ A relationship between two parent elements requires that at least one pair of th
 
 ### C6. Capability impact
 
-Each capability must be the potential to transform exactly one object. _Exception:_ At the leaf-level, a capability may transform multiple objects. _Rationale:_ This ensures that every capability has a well-defined, non-overlapping impact on value creation. The exception prevents artificial fragmentation of what the business considers a single cohesive capability.
+Each capability transforms exactly one object. _Exception:_ At the leaf-level, a capability may transform multiple objects. _Rationale:_ This ensures that every capability has a well-defined, non-overlapping impact on value creation. The exception prevents artificial fragmentation of what the business considers a single cohesive capability.
 
 > $$
 > \begin{aligned}
