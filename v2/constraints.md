@@ -16,13 +16,13 @@ The constraints are defined with respect to the core elements and relationships 
 
 We represent a business capability model $M$ as a relational structure $M = (E, R)$, where:
 
-* $E = S \cup C \cup O$ is a set of elements, such that:
+* $E = C \cup O \cup S$ is a set of elements, such that:
   * $C$ is a set of _capabilities_
   * $O$ is a set of _value object types_
   * $S$ is a set of _value streams_
-* $R \subseteq E \times E$ is the set of binary relations, partitioned into disjoint sets $V$ and $H$, such that:
-  * $V \subseteq C \times C \cup O \times O \cup S \times S$ is the set of vertical relations $\\{ \texttt{isRefinedBy} \\}$, where:
-    * $\texttt{isRefinedBy}$ denotes the _has subcapability_, _has subdomain_, and _has stage_ relationships
+* $R$ is the set of binary relations, partitioned into disjoint sets $V$ and $H$, such that:
+  * $V$ is the set of vertical relations $\\{ \texttt{isRefinedBy} \\}$, where:
+    * $\texttt{isRefinedBy} \subseteq (C \times C) \cup (O \times O) \cup (S \times S)$ denotes the _has subcapability_, _has subdomain_, and _has stage_ relationships
   * $H$ is the set of horizontal relations $\\{ \texttt{affects}, \texttt{enablesWithCoManifestation}, \texttt{enablesWithoutCoManifestation}, \texttt{isBasedOn}, \texttt{isPrincipalOf}, \texttt{canTransform} \\}$, where:
     * $\texttt{affects} \subseteq S \times S$ denotes the _affects_ relationship between _value streams_
     * $\texttt{enablesWithCoManifestation} \subseteq C \times C$ denotes the _enablement_ relator between _capabilities_ where co-manifestation is true
