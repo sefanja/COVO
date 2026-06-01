@@ -2,7 +2,7 @@
 
 This document provides the definitions for the 13 modeling constraints of the Capability-Object-Value Ontology (COVO).
 
-The theoretical foundations for constraints C1–10 are established by Severin et al. in [Semantically Coherent Business Architecture Models: Integrating Capabilities, Value Streams, and Business Objects](https://www.researchgate.net/publication/401169619_Semantically_Coherent_Business_Architecture_Models_Integrating_Capabilities_Value_Streams_and_Business_Objects) (awarded Best Forum Paper at PoEM 2025). Constraints C11–13 are detailed in their next paper, _Semantic Symmetry in Business Architecture: Demarcating Capability Boundaries with Object Models_ (submitted).
+The theoretical foundations for constraints C1–10 are established by Severin et al. in [Semantically Coherent Business Architecture Models: Integrating Capabilities, Value Streams, and Business Objects](https://www.researchgate.net/publication/401169619_Semantically_Coherent_Business_Architecture_Models_Integrating_Capabilities_Value_Streams_and_Business_Objects) (awarded Best Forum Paper at PoEM 2025). Constraints C11–13 are detailed in the follow-up paper, _Semantic Symmetry in Business Architecture: Demarcating Capability Boundaries with Object Models_ (submitted).
 
 These constraints are implemented in the open-source [COVO Validator](https://github.com/sefanja/COVO-Validator) for Archi.
 
@@ -20,20 +20,20 @@ We represent a business capability model $M$ as a relational structure $M = (E, 
   * $C$ is a set of _capabilities_
   * $O$ is a set of _value object types_
   * $S$ is a set of _value streams_
-* $R$ is the set of binary relations, partitioned into disjoint sets $V$ and $H$, such that:
+* $R$ is a set of binary relations, partitioned into disjoint sets $V$ and $H$, such that:
   * $V$ is the set of vertical relations $\\{ \texttt{isRefinedBy} \\}$, where:
     * $\texttt{isRefinedBy} \subseteq (C \times C) \cup (O \times O) \cup (S \times S)$ denotes the _has subcapability_, _has subdomain_, and _has stage_ relationships
   * $H$ is the set of horizontal relations $\\{ \texttt{affects}, \texttt{enablesWithCoManifestation}, \texttt{enablesWithoutCoManifestation}, \texttt{isBasedOn}, \texttt{isPrincipalOf}, \texttt{canTransform} \\}$, where:
-    * $\texttt{affects} \subseteq S \times S$ denotes the _affects_ relationship between _value streams_
-    * $\texttt{enablesWithCoManifestation} \subseteq C \times C$ denotes the _enablement_ relator between _capabilities_ where co-manifestation is true
-    * $\texttt{enablesWithoutCoManifestation} \subseteq C \times C$ denotes the _enablement_ relator between _capabilities_ where co-manifestation is false
-    * $\texttt{isBasedOn} \subseteq O \times O$ denotes the _is based on_ relationship between _value object types_
+    * $\texttt{affects} \subseteq S \times S$ denotes the _affects_ relationship on _value streams_
+    * $\texttt{enablesWithCoManifestation} \subseteq C \times C$ denotes the _enablement_ relator on _capabilities_ where co-manifestation is true
+    * $\texttt{enablesWithoutCoManifestation} \subseteq C \times C$ denotes the _enablement_ relator on _capabilities_ where co-manifestation is false
+    * $\texttt{isBasedOn} \subseteq O \times O$ denotes the _is based on_ relationship on _value object types_
     * $\texttt{isPrincipalOf} \subseteq C \times S$ denotes the _is principal capability of_ relationship from _capability_ to _value stream_
     * $\texttt{canTransform} \subseteq C \times O$ denotes the _is ability to transform_ relationship from _capability_ to _value object type_
 
 Furthermore:
 
-* Let $\texttt{enables} = \texttt{enablesWithCoManifestation} \cup \texttt{enablesWithoutCoManifestation}$ be the set of _enablement_ relationships.
+* Let $\texttt{enables} = \texttt{enablesWithCoManifestation} \cup \texttt{enablesWithoutCoManifestation}$ denote the _enablement_ relator on _capabilities_.
 * Let $\texttt{isLeaf}(e)$ be defined as an element with no children: $\texttt{isLeaf}(e) \iff \neg \exists e' \in E: \texttt{isRefinedBy}(e, e')$.
 * Let $\texttt{depth}(e)$ be a function that yields the total number of ancestors of $e$.
 * Let $R^∗$ denote the reflexive transitive closure of a relation $R$, and $R^+$ denote the transitive closure (one or more steps).
