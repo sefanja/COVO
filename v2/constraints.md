@@ -83,7 +83,7 @@ _Rationale:_ This ensures that low-level relationships are reflected at higher l
 
 > $$
 > \begin{aligned}
->   & \forall e_1, e_2 \in E, h \in H \; \exists p : h(e_1, e_2) \land \big( \texttt{isRefinedBy}(p, e_1) \lor \texttt{isRefinedBy}(p, e_2) \big) \implies \\
+>   & \forall e_1, e_2 \in E, h \in H \\; \exists p : h(e_1, e_2) \land \big( \texttt{isRefinedBy}(p, e_1) \lor \texttt{isRefinedBy}(p, e_2) \big) \implies \\
 >   & \exists p_1, p_2 : \texttt{isRefinedBy}(p_1, e_1) \land \texttt{isRefinedBy}(p_2, e_2) \land \big( p_1 = p_2 \lor h(p_1, p_2) \big) \lor {} \\
 >   & \left\\{ \begin{aligned}
 >     {\scriptscriptstyle \texttt{(1) }} & e_1, e_2 \in O \\
@@ -138,7 +138,7 @@ Each object must be transformed by exactly one capability. _Exception:_ At the l
 Each capability must either manifest as a principal capability in a value stream or co-manifest for another capability that does. _Rationale:_ This guarantees that all potential is ultimately linked to a value-creating purpose.
 
 > $$
-> \forall c \in C \; \exists c' \in C, s \in S : \texttt{enablesWithCoManifestation}^{\*} (c, c') \land \texttt{isPrincipalOf} (c', s)
+> \forall c \in C \\; \exists c' \in C, s \in S : \texttt{enablesWithCoManifestation}^{\*} (c, c') \land \texttt{isPrincipalOf} (c', s)
 > $$
 
 ### C9. Traceability
@@ -146,7 +146,7 @@ Each capability must either manifest as a principal capability in a value stream
 Each value stream must manifest exactly one principal capability. _Rationale:_ This constraint ensures traceability and governability. It establishes a clear, unambiguous link from value-creating action back to the accountable capability.
 
 > $$
-> \forall s \in S \; \exists! c \in C : \texttt{isPrincipalOf}(c, s)
+> \forall s \in S \\; \exists! c \in C : \texttt{isPrincipalOf}(c, s)
 > $$
 
 ### C10. Exclusive manifestation
