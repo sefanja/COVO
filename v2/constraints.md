@@ -40,7 +40,7 @@ Furthermore:
 * Let $\texttt{depth}(e)$ be a function that yields the total number of ancestors of $e$.
 * Let $R^∗$ denote the reflexive transitive closure of a relation $R$, and $R^+$ denote the transitive closure (one or more steps).
 
-_Note: These constraints only deal with COVO's `Value Object Type`, not its instance (`Value Object`). For readability, this document simply uses the term 'value object' (or just 'object') to refer to its type. This aligns with enterprise modeling languages like ArchiMate, which do not distinguish between types and instances._
+_Note: These constraints are directed at the type level. For readability, this document simply uses terms like 'capability' and 'object' to refer to their types. This aligns with enterprise modeling languages like ArchiMate, which do not distinguish between types and instances._
 
 For a model $M$ to be COVO-compliant, the following constraints must hold:
 
