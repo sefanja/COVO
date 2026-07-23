@@ -28,8 +28,8 @@ We represent a business capability model $M$ as a relational structure $M = (E, 
   * $V$ is the set of vertical relations $\\{ \texttt{isRefinedBy} \\}$, where:
     * $\texttt{isRefinedBy} \subseteq (C \times C) \cup (O \times O) \cup (S \times S)$ denotes the _has subcapability_, _has subdomain_, and _has stage_ relationships
   * $H$ is the set of horizontal relations $\\{ \texttt{affects}, \texttt{enables}, \texttt{isBasedOn}, \texttt{isPrincipalOf}, \texttt{canTransform} \\}$, where:
-    * $\texttt{affects} \subseteq S \times S$ denotes the _affects_ relation on _value streams_
-    * $\texttt{enables} \subseteq C \times C$ denotes the _enables_ relation on _capabilities_
+    * $\texttt{affects} \subseteq S \times S$ denotes the _affects_ relationship on _value streams_
+    * $\texttt{enables} \subseteq C \times C$ denotes the _enables_ relationship on _capabilities_
     * $\texttt{isBasedOn} \subseteq O \times O$ denotes the _is based on_ relationship on _value object types_
     * $\texttt{isManifestedIn} \subseteq C \times S$ denotes the _is manifested in_ relationship from _capability_ to _value stream_
     * $\texttt{isPrincipalOf} \subseteq \texttt{isManifestedIn}$ denotes the _is principal capability of_ relationship from _capability_ to _value stream_
@@ -45,7 +45,7 @@ For a model $M$ to be COVO-compliant, the following constraints must hold:
 
 ## Hierarchical consistency (C1-5)
 
-These modeling constraints ensure that capabilities, objects and value streams are modeled in valid part-whole hierarchies that enable consistent zooming. We refer to elements in these hierarchies as parents, children, and ancestors. Note that hierarchical (or 'vertical') relations are only allowed between elements of the same type (e.g., not between capability and object).
+These modeling constraints ensure that capabilities, objects and value streams are modeled in valid part-whole hierarchies that enable consistent zooming. We refer to elements in these hierarchies as parents, children, and ancestors. Note that hierarchical (or 'vertical') relationships are only allowed between elements of the same type (e.g., not between capability and object).
 
 ### C1. Unique parent
 
@@ -77,21 +77,22 @@ A non-hierarchical relationship between two elements requires a corresponding re
 
 1. it is a relationship between objects (as structural propagation is handled implicitly via rules C11-12);
 2. the parent elements are both principal capabilities within the same top-level value stream (to prevent redundant propagation of _enables_ relationships to higher levels);
-3. propagation would introduce an _affects_ or _enables_ cycle (to maintain a forward, value-directed path); or
-4. propagation would introduce a redundant _affects_ path (e.g., an edge $A \rightarrow C$ that is already implied by reachability via $A \rightarrow B \rightarrow C$, allowing for compact models).
+3. it is an _is manifested in_ relationship between a capability and a value stream, while their parents are not connected through a chain of _enables_ and _is principal capability of_;
+4. propagation would introduce an _affects_ or _enables_ cycle (to maintain a forward, value-directed path); or
+5. propagation would introduce a redundant _affects_ path (e.g., an edge $A \rightarrow C$ that is already implied by reachability via $A \rightarrow B \rightarrow C$, allowing for compact models).
 
-_Rationale:_ This ensures that low-level relationships are reflected at higher levels of abstraction. The exception allows lower-level support relations to remain implicit at higher levels. This aligns with the principle that value streams represent simplified views of value creation rather than detailed process models.
+_Rationale:_ This ensures that low-level relationships are reflected at higher levels of abstraction. The exception allows lower-level support relationships to remain implicit at higher levels. This aligns with the principle that value streams represent simplified views of value creation rather than detailed process models.
 
 > $$
 > \begin{aligned}
->   & \forall e_1, e_2 \in E, h \in H \\; \exists p : h(e_1, e_2) \land \big( \texttt{isRefinedBy}(p, e_1) \lor \texttt{isRefinedBy}(p, e_2) \big) \implies \\
->   & \exists p_1, p_2 : \texttt{isRefinedBy}(p_1, e_1) \land \texttt{isRefinedBy}(p_2, e_2) \land \big( p_1 = p_2 \lor h(p_1, p_2) \big) \lor {} \\
+>   & \forall \texttt{h} \in H, e_1, e_2, p_1, p_2 \in E : \texttt{h}(e_1, e_2) \land \texttt{isRefinedBy}(p_1, e_1) \land \texttt{isRefinedBy}(p_2, e_2) \implies \\
+>   & \texttt{h}(p_1, p_2) \lor p_1 = p_2 \lor {} \\
 >   & \left\\{ \begin{aligned}
 >     {\scriptscriptstyle \texttt{(1) }} & e_1, e_2 \in O \\
->     {\scriptscriptstyle \texttt{(2) }} & h \in \texttt{enables} \cup \texttt{isManifestedIn} \\; \exists s_1, s_2, s_a \in S : \\
->                                        & \texttt{isPrincipalOf}(p_1, s_1) \land \texttt{isPrincipalOf}(p_2, s_2) \land \texttt{isRefinedBy}^{\*}(s_a, s_1) \land \texttt{isRefinedBy}^{\*}(s_a, s_2) \\
->     {\scriptscriptstyle \texttt{(3) }} & h \in \texttt{enables} : \texttt{enables}^{+}(p_2, p_1) \lor h \in \texttt{affects} : \texttt{affects}^{+}(p_2, p_1) \\
->     {\scriptscriptstyle \texttt{(4) }} & h \in \texttt{affects} : (\texttt{affects} \circ \texttt{affects}^{+})(p_1, p_2)
+>     {\scriptscriptstyle \texttt{(2) }} & \texttt{h} \in \texttt{enables} \land \exists s_1, s_2, s_a \in S : \texttt{isPrincipalOf}(p_1, s_1) \land \texttt{isPrincipalOf}(p_2, s_2) \land \texttt{isRefinedBy}^{\*}(s_a, s_1) \land \texttt{isRefinedBy}^{\*}(s_a, s_2) \\
+>     {\scriptscriptstyle \texttt{(3) }} & \texttt{h} \in \texttt{isManifestedIn} \land \neg (\texttt{enables}^{\*} \circ \texttt{isPrincipalOf})(p_1, p_2) \\
+>     {\scriptscriptstyle \texttt{(4) }} & \big( \texttt{h} \in \texttt{enables} \land \texttt{enables}^{+}(p_2, p_1) \big) \lor \big( \texttt{h} \in \texttt{affects} \land \texttt{affects}^{+}(p_2, p_1) \big) \\
+>     {\scriptscriptstyle \texttt{(5) }} & \texttt{h} \in \texttt{affects} \land (\texttt{affects} \circ \texttt{affects}^{+})(p_1, p_2)
 >   \end{aligned} \right.
 > \end{aligned}
 > $$
@@ -102,8 +103,8 @@ A relationship between two parent elements requires that at least one pair of th
 
 > $$
 > \begin{aligned}
->   & \forall e_1, e_2 \in E, h \in H : h(e_1, e_2) \land \big(\neg \texttt{isLeaf}(e_1) \lor \neg \texttt{isLeaf}(e_2)\big) \implies \\
->   & \exists c_1, c_2 \in E : \texttt{isRefinedBy}(e_1, c_1) \land \texttt{isRefinedBy}(e_2, c_2) \land h(c_1, c_2)
+>   & \forall e_1, e_2 \in E, \texttt{h} \in H : \texttt{h}(e_1, e_2) \land \big(\neg \texttt{isLeaf}(e_1) \lor \neg \texttt{isLeaf}(e_2)\big) \implies \\
+>   & \exists c_1, c_2 \in E : \texttt{isRefinedBy}(e_1, c_1) \land \texttt{isRefinedBy}(e_2, c_2) \land \texttt{h}(c_1, c_2)
 > \end{aligned}
 > $$
 
@@ -181,7 +182,7 @@ Each _affects_ relationship between two value stream stages must have an _is bas
 
 ### C12. Grounded capability dependencies
 
-Each _enables_ relationship between two capabilities must have a corresponding _is based on_ relationship between their respective objects (if distinct). _Rationale:_ An _enablement_ relationship states that the enabling capability provides a necessary precondition for the enabled capability's effective manifestation. Therefore, the object transformed by the enabled capability must have its states delimited by (i.e., _be based on_) the object transformed by the enabling capability.
+Each _enables_ relationship between two capabilities must have a corresponding _is based on_ relationship between their respective objects (if distinct). _Rationale:_ An _enables_ relationship states that the enabling capability provides a necessary precondition for the enabled capability's effective manifestation. Therefore, the object transformed by the enabled capability must have its states delimited by (i.e., _be based on_) the object transformed by the enabling capability.
 
 > $$
 > \begin{aligned}
@@ -193,7 +194,7 @@ Each _enables_ relationship between two capabilities must have a corresponding _
 
 ## C13. Justified object dependencies
 
-An _is based on_ relationship between two objects is only permitted if it is justified by one of the following conditions: (i) the objects are transformed by the same capability, (ii) the objects are transformed by capabilities with an _enablement_ relationship (per C12), or (iii) the objects are transformed by the principal capabilities of value stream stages with an _affects_ relationship (per C11). _Rationale:_ While C11 and C12 prevent ungrounded behavioral dependencies, C13 ensures the reverse: that no object dependency is ignored by the behavioral design.
+An _is based on_ relationship between two objects is only permitted if it is justified by one of the following conditions: (i) the objects are transformed by the same capability, (ii) the objects are transformed by capabilities with an _enables_ relationship (per C12), or (iii) the objects are transformed by the principal capabilities of value stream stages with an _affects_ relationship (per C11). _Rationale:_ While C11 and C12 prevent ungrounded behavioral dependencies, C13 ensures the reverse: that no object dependency is ignored by the behavioral design.
 
 > $$
 > \begin{aligned}
