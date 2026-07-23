@@ -89,10 +89,10 @@ _Rationale:_ This ensures that low-level relationships are reflected at higher l
 >   & \texttt{h}(p_1, p_2) \lor p_1 = p_2 \lor {} \\
 >   & \left\\{ \begin{aligned}
 >     {\scriptscriptstyle \texttt{(1) }} & e_1, e_2 \in O \\
->     {\scriptscriptstyle \texttt{(2) }} & \texttt{h} \in \texttt{enables} \land \exists s_1, s_2, s_a \in S : \texttt{isPrincipalOf}(p_1, s_1) \land \texttt{isPrincipalOf}(p_2, s_2) \land \texttt{isRefinedBy}^{\*}(s_a, s_1) \land \texttt{isRefinedBy}^{\*}(s_a, s_2) \\
->     {\scriptscriptstyle \texttt{(3) }} & \texttt{h} \in \texttt{isManifestedIn} \land \neg (\texttt{enables}^{\*} \circ \texttt{isPrincipalOf})(p_1, p_2) \\
->     {\scriptscriptstyle \texttt{(4) }} & \big( \texttt{h} \in \texttt{enables} \land \texttt{enables}^{+}(p_2, p_1) \big) \lor \big( \texttt{h} \in \texttt{affects} \land \texttt{affects}^{+}(p_2, p_1) \big) \\
->     {\scriptscriptstyle \texttt{(5) }} & \texttt{h} \in \texttt{affects} \land (\texttt{affects} \circ \texttt{affects}^{+})(p_1, p_2)
+>     {\scriptscriptstyle \texttt{(2) }} & \exists s_1, s_2, s_a \in S : \texttt{isPrincipalOf}(p_1, s_1) \land \texttt{isPrincipalOf}(p_2, s_2) \land \texttt{isRefinedBy}^{\*}(s_a, s_1) \land \texttt{isRefinedBy}^{\*}(s_a, s_2) \\
+>     {\scriptscriptstyle \texttt{(3) }} & \texttt{h} \in \texttt{isManifestedIn} \setminus \texttt{isPrincipalOf} \land \neg (\texttt{enables}^{\*} \circ \texttt{isPrincipalOf})(p_1, p_2) \\
+>     {\scriptscriptstyle \texttt{(4) }} & \texttt{enables}^{+}(p_2, p_1) \lor \texttt{affects}^{+}(p_2, p_1) \\
+>     {\scriptscriptstyle \texttt{(5) }} & (\texttt{affects} \circ \texttt{affects}^{+})(p_1, p_2)
 >   \end{aligned} \right.
 > \end{aligned}
 > $$
