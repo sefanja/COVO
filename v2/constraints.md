@@ -2,19 +2,21 @@
 
 This document provides the definitions for the 13 modeling constraints of the Capability-Object-Value Ontology (COVO).
 
-The theoretical foundations for constraints C1–10 are established by Severin et al. in [Semantically Coherent Business Architecture Models: Integrating Capabilities, Value Streams, and Business Objects](https://www.researchgate.net/publication/401169619_Semantically_Coherent_Business_Architecture_Models_Integrating_Capabilities_Value_Streams_and_Business_Objects) (awarded Best Forum Paper at PoEM 2025). Constraints C11–13 are detailed in the follow-up paper, _Semantic Symmetry in Business Architecture: Demarcating Capability Boundaries with Object Models_ (submitted).
+The theoretical foundations for constraints C1–10 are established by Severin et al. in [Semantically Coherent Business Architecture Models: Integrating Capabilities, Value Streams, and Business Objects](https://www.researchgate.net/publication/401169619_Semantically_Coherent_Business_Architecture_Models_Integrating_Capabilities_Value_Streams_and_Business_Objects) (awarded Best Forum Paper at PoEM 2025). Constraints C11–13 are detailed in the follow-up paper, _Semantic Symmetry in Business Architecture: Demarcating Capability Boundaries with Object Models_ (accepted for publication).
 
 These constraints are implemented in the open-source [COVO Validator](https://github.com/sefanja/COVO-Validator) for Archi.
 
 ## Ontological Foundation
 
-The constraints are defined with respect to the core elements (`Capability`, `Value Object Type`, `Value Stream`) and their relationships depicted in the OntoUML diagram:
+The constraints are defined with respect to the core elements (`Capability`, `Value Object`, `Value Stream`) and their relationships depicted in the OntoUML diagram.
 
 ![COVO in OntoUML](diagrams/COVO.svg)
 
 In essence, the model represents that an `Organization` manifests its `Capabilities` through `Value Streams`, which transform `Value Objects` to satisfy `Value Commitments` to `Stakeholders`.
 
 ## Definitions
+
+Since enterprise architecture models typically operate at the type level, we adopt the convention of using the terms _value object_ and _value stream_ as shorthands for their respective type-level constructs.
 
 We represent a business capability model $M$ as a relational structure $M = (E, R)$, where:
 
@@ -25,22 +27,19 @@ We represent a business capability model $M$ as a relational structure $M = (E, 
 * $R$ is a set of binary relations, partitioned into disjoint sets $V$ and $H$, such that:
   * $V$ is the set of vertical relations $\\{ \texttt{isRefinedBy} \\}$, where:
     * $\texttt{isRefinedBy} \subseteq (C \times C) \cup (O \times O) \cup (S \times S)$ denotes the _has subcapability_, _has subdomain_, and _has stage_ relationships
-  * $H$ is the set of horizontal relations $\\{ \texttt{affects}, \texttt{enablesWithCoManifestation}, \texttt{enablesWithoutCoManifestation}, \texttt{isBasedOn}, \texttt{isPrincipalOf}, \texttt{canTransform} \\}$, where:
-    * $\texttt{affects} \subseteq S \times S$ denotes the _affects_ relationship on _value streams_
-    * $\texttt{enablesWithCoManifestation} \subseteq C \times C$ denotes the _enablement_ relator on _capabilities_ where co-manifestation is true
-    * $\texttt{enablesWithoutCoManifestation} \subseteq C \times C$ denotes the _enablement_ relator on _capabilities_ where co-manifestation is false
+  * $H$ is the set of horizontal relations $\\{ \texttt{affects}, \texttt{enables}, \texttt{isBasedOn}, \texttt{isPrincipalOf}, \texttt{canTransform} \\}$, where:
+    * $\texttt{affects} \subseteq S \times S$ denotes the _affects_ relation on _value streams_
+    * $\texttt{enables} \subseteq C \times C$ denotes the _enables_ relation on _capabilities_
     * $\texttt{isBasedOn} \subseteq O \times O$ denotes the _is based on_ relationship on _value object types_
-    * $\texttt{isPrincipalOf} \subseteq C \times S$ denotes the _is principal capability of_ relationship from _capability_ to _value stream_
+    * $\texttt{isManifestedIn} \subseteq C \times S$ denotes the _is manifested in_ relationship from _capability_ to _value stream_
+    * $\texttt{isPrincipalOf} \subseteq \texttt{isManifestedIn}$ denotes the _is principal capability of_ relationship from _capability_ to _value stream_
     * $\texttt{canTransform} \subseteq C \times O$ denotes the _is ability to transform_ relationship from _capability_ to _value object type_
 
 Furthermore:
 
-* Let $\texttt{enables} = \texttt{enablesWithCoManifestation} \cup \texttt{enablesWithoutCoManifestation}$ denote the _enablement_ relator on _capabilities_.
 * Let $\texttt{isLeaf}(e)$ be defined as an element with no children: $\texttt{isLeaf}(e) \iff \neg \exists e' \in E: \texttt{isRefinedBy}(e, e')$.
 * Let $\texttt{depth}(e)$ be a function that yields the total number of ancestors of $e$.
 * Let $R^∗$ denote the reflexive transitive closure of a relation $R$, and $R^+$ denote the transitive closure (one or more steps).
-
-_Note: These constraints are directed at the type level. For readability, this document simply uses terms like 'capability' and 'object' to refer to their types. This aligns with enterprise modeling languages like ArchiMate, which do not distinguish between types and instances._
 
 For a model $M$ to be COVO-compliant, the following constraints must hold:
 
@@ -89,9 +88,10 @@ _Rationale:_ This ensures that low-level relationships are reflected at higher l
 >   & \exists p_1, p_2 : \texttt{isRefinedBy}(p_1, e_1) \land \texttt{isRefinedBy}(p_2, e_2) \land \big( p_1 = p_2 \lor h(p_1, p_2) \big) \lor {} \\
 >   & \left\\{ \begin{aligned}
 >     {\scriptscriptstyle \texttt{(1) }} & e_1, e_2 \in O \\
->     {\scriptscriptstyle \texttt{(2) }} & \exists s_1, s_2, s_a \in S : \texttt{isPrincipalOf}(p_1, s_1) \land \texttt{isPrincipalOf}(p_2, s_2) \land \texttt{isRefinedBy}^{\*}(s_a, s_1) \land \texttt{isRefinedBy}^{\*}(s_a, s_2) \\
->     {\scriptscriptstyle \texttt{(3) }} & \texttt{enables}^{+}(p_2, p_1) \lor \texttt{affects}^{+}(p_2, p_1) \\
->     {\scriptscriptstyle \texttt{(4) }} & (\texttt{affects} \circ \texttt{affects}^{+})(p_1, p_2)
+>     {\scriptscriptstyle \texttt{(2) }} & h \in \texttt{enables} \cup \texttt{isManifestedIn} \\; \exists s_1, s_2, s_a \in S : \\
+>                                        & \texttt{isPrincipalOf}(p_1, s_1) \land \texttt{isPrincipalOf}(p_2, s_2) \land \texttt{isRefinedBy}^{\*}(s_a, s_1) \land \texttt{isRefinedBy}^{\*}(s_a, s_2) \\
+>     {\scriptscriptstyle \texttt{(3) }} & h \in \texttt{enables} : \texttt{enables}^{+}(p_2, p_1) \lor h \in \texttt{affects} : \texttt{affects}^{+}(p_2, p_1) \\
+>     {\scriptscriptstyle \texttt{(4) }} & h \in \texttt{affects} : (\texttt{affects} \circ \texttt{affects}^{+})(p_1, p_2)
 >   \end{aligned} \right.
 > \end{aligned}
 > $$
@@ -137,10 +137,10 @@ Each object must be transformed by exactly one capability. _Exception:_ At the l
 
 ### C8. Capability purpose
 
-Each capability must either manifest as a principal capability in a value stream or co-manifest for another capability that does. _Rationale:_ This guarantees that all potential is ultimately linked to a value-creating purpose.
+Each capability must manifest in a value stream. _Rationale:_ This guarantees that all potential is ultimately linked to a value-creating purpose.
 
 > $$
-> \forall c \in C \\; \exists c' \in C, s \in S : \texttt{enablesWithCoManifestation}^{\*} (c, c') \land \texttt{isPrincipalOf} (c', s)
+> \forall c \in C \\; \exists s \in S : \texttt{isManifestedIn} (c, s)
 > $$
 
 ### C9. Traceability
