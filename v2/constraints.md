@@ -27,12 +27,12 @@ We represent a business capability model $M$ as a relational structure $M = (E, 
 * $R$ is a set of binary relations, partitioned into disjoint sets $V$ and $H$, such that:
   * $V$ is the set of vertical relations $\\{ \texttt{isRefinedBy} \\}$, where:
     * $\texttt{isRefinedBy} \subseteq (C \times C) \cup (O \times O) \cup (S \times S)$ denotes the _has subcapability_, _has subdomain_, and _has stage_ relationships
-  * $H$ is the set of horizontal relations $\\{ \texttt{affects}, \texttt{enables}, \texttt{isBasedOn}, \texttt{isPrincipalOf}, \texttt{canTransform} \\}$, where:
+  * $H$ is the set of horizontal relations $\\{ \texttt{affects}, \texttt{enables}, \texttt{isBasedOn}, \texttt{principal}, \texttt{canTransform} \\}$, where:
     * $\texttt{affects} \subseteq S \times S$ denotes the _affects_ relationship on _value streams_
     * $\texttt{enables} \subseteq C \times C$ denotes the _enables_ relationship on _capabilities_
     * $\texttt{isBasedOn} \subseteq O \times O$ denotes the _is based on_ relationship on _value object types_
     * $\texttt{isManifestedIn} \subseteq C \times S$ denotes the _is manifested in_ relationship from _capability_ to _value stream_
-    * $\texttt{isPrincipalOf} \subseteq \texttt{isManifestedIn}$ denotes the _is principal capability of_ relationship from _capability_ to _value stream_
+    * $\texttt{principal} \subseteq \texttt{isManifestedIn}$ denotes the _is principal capability of_ relationship from _capability_ to _value stream_
     * $\texttt{canTransform} \subseteq C \times O$ denotes the _is ability to transform_ relationship from _capability_ to _value object type_
 
 Furthermore:
@@ -40,6 +40,7 @@ Furthermore:
 * Let $\texttt{isLeaf}(e)$ be defined as an element with no children: $\texttt{isLeaf}(e) \iff \neg \exists e' \in E: \texttt{isRefinedBy}(e, e')$.
 * Let $\texttt{depth}(e)$ be a function that yields the total number of ancestors of $e$.
 * Let $R^∗$ denote the reflexive transitive closure of a relation $R$, and $R^+$ denote the transitive closure (one or more steps).
+* Let $\texttt{refines} \subseteq (C \times C) \cup (O \times O) \cup (S \times S)$ be a relation such that $(y, x) \in \texttt{refines} \iff (x, y) \in \texttt{isRefinedBy}$.
 
 For a model $M$ to be COVO-compliant, the following constraints must hold:
 
@@ -89,8 +90,8 @@ _Rationale:_ This ensures that low-level relationships are reflected at higher l
 >   & \texttt{h}(p_1, p_2) \lor p_1 = p_2 \lor {} \\
 >   & \left\\{ \begin{aligned}
 >     {\scriptscriptstyle \texttt{(1) }} & e_1, e_2 \in O \\
->     {\scriptscriptstyle \texttt{(2) }} & \exists s_1, s_2, s_a \in S : \texttt{isPrincipalOf}(p_1, s_1) \land \texttt{isPrincipalOf}(p_2, s_2) \land \texttt{isRefinedBy}^{\*}(s_a, s_1) \land \texttt{isRefinedBy}^{\*}(s_a, s_2) \\
->     {\scriptscriptstyle \texttt{(3) }} & \texttt{h} \in \texttt{isManifestedIn} \setminus \texttt{isPrincipalOf} \land \neg (\texttt{enables}^{\*} \circ \texttt{isPrincipalOf})(p_1, p_2) \\
+>     {\scriptscriptstyle \texttt{(2) }} & \exists s \in S : (\texttt{principal} \circ \texttt{refines}^{\*})(p_1, s) \land (\texttt{principal} \circ \texttt{refines}^{\*})(p_2, s) \\
+>     {\scriptscriptstyle \texttt{(3) }} & \neg (\texttt{enables}^{\*} \circ \texttt{principal})(p_1, p_2) \\
 >     {\scriptscriptstyle \texttt{(4) }} & \texttt{enables}^{+}(p_2, p_1) \lor \texttt{affects}^{+}(p_2, p_1) \\
 >     {\scriptscriptstyle \texttt{(5) }} & (\texttt{affects} \circ \texttt{affects}^{+})(p_1, p_2)
 >   \end{aligned} \right.
@@ -103,8 +104,8 @@ A relationship between two parent elements requires that at least one pair of th
 
 > $$
 > \begin{aligned}
->   & \forall e_1, e_2 \in E, \texttt{h} \in H : \texttt{h}(e_1, e_2) \land \big(\neg \texttt{isLeaf}(e_1) \lor \neg \texttt{isLeaf}(e_2)\big) \implies \\
->   & \exists c_1, c_2 \in E : \texttt{isRefinedBy}(e_1, c_1) \land \texttt{isRefinedBy}(e_2, c_2) \land \texttt{h}(c_1, c_2)
+>   & \forall \texttt{h} \in H, e_1, e_2 \in E : \texttt{h}(e_1, e_2) \implies \\
+>   & ( \texttt{isRefinedBy} \circ \texttt{h} \circ \texttt{refines} )(e_1, e_2) \lor \big( \texttt{isLeaf}(e_1) \land \texttt{isLeaf}(e_2) \big)
 > \end{aligned}
 > $$
 
@@ -149,7 +150,7 @@ Each capability must manifest in a value stream. _Rationale:_ This guarantees th
 Each value stream must manifest exactly one principal capability. _Rationale:_ This constraint ensures traceability and governability. It establishes a clear, unambiguous link from value-creating action back to the accountable capability.
 
 > $$
-> \forall s \in S \\; \exists! c \in C : \texttt{isPrincipalOf}(c, s)
+> \forall s \in S \\; \exists! c \in C : \texttt{principal}(c, s)
 > $$
 
 ### C10. Exclusive manifestation
@@ -158,8 +159,8 @@ Each capability may manifest only once per top-level value stream as a principal
 
 > $$
 > \begin{aligned}  
-> & \forall c \in C, s_1, s_2 \in S : \big( \neg \texttt{isLeaf}(c) \land \texttt{isPrincipalOf}(c, s_1) \land \texttt{isPrincipalOf}(c, s_2) \big) \implies \\
-> & \exists s_a \in S : \texttt{isRefinedBy}^{\*}(s_a, s_1) \land \texttt{isRefinedBy}^{\*}(s_a, s_2)  
+> & \forall c \in C, s \in S : \texttt{principal}(c, s_1) \land \texttt{principal}(c, s_2) \land s_1 \neq s_2 \implies \\
+> & \neg ( \texttt{refines}^{\*} \circ \texttt{isRefinedBy}^{\*} )(s_1, s_2) \lor \texttt{isLeaf}(c)  
 > \end{aligned}
 > $$
 
@@ -173,10 +174,10 @@ Each _affects_ relationship between two value stream stages must have an _is bas
 
 > $$
 > \begin{aligned}
->   & \forall s_1, s_2 \in S : \texttt{affects}(s_1, s_2) \implies \exists o_1, o_2 \in O, c_1, c_2 \in C : \\
->   & \texttt{isPrincipalOf}(c_1, s_1) \land \texttt{isPrincipalOf}(c_2, s_2) \land {} \\
->   & \texttt{canTransform}(c_1, o_1) \land \texttt{canTransform}(c_2, o_2) \land {} \\
->   & (o_1 = o_2 \lor \texttt{isBasedOn}(o_2, o_1))
+>   & \forall s_1, s_2 \in S : \texttt{affects}(s_1, s_2) \implies \exists o_1, o_2 \in O : \\
+>   & ( \texttt{principal}^{-1} \circ \texttt{canTransform} )(s_1, o_1) \land {} \\
+>   & ( \texttt{principal}^{-1} \circ \texttt{canTransform} )(s_2, o_2) \land {} \\
+>   & \big( \texttt{isBasedOn}(o_2, o_1) \lor o_1 = o_2 \big)
 > \end{aligned}
 > $$
 
@@ -186,9 +187,9 @@ Each _enables_ relationship between two capabilities must have a corresponding _
 
 > $$
 > \begin{aligned}
->   & \forall c_1, c_2 \in C : \texttt{enables}(c_1, c_2) \implies \\
->   & \exists o_1, o_2 \in O : \texttt{canTransform}(c_1, o_1) \land \texttt{canTransform}(c_2, o_2) \land {} \\
->   & (o_1 = o_2 \lor \texttt{isBasedOn}(o_2, o_1))
+>   & \forall c_1, c_2 \in C : \texttt{enables}(c_1, c_2) \implies \exists o_1, o_2 \in O : \\
+>   & \texttt{canTransform}(c_1, o_1) \land \texttt{canTransform}(c_2, o_2) \land {} \\
+>   & \big( \texttt{isBasedOn}(o_2, o_1) \lor o_1 = o_2 \big)
 > \end{aligned}
 > $$
 
@@ -198,12 +199,12 @@ An _is based on_ relationship between two objects is only permitted if it is jus
 
 > $$
 > \begin{aligned}
->   & \forall o_1, o_2 \in O : \texttt{isBasedOn}(o_2, o_1) \implies \\
->   & \exists c_1, c_2 \in C : \texttt{canTransform}(c_1, o_1) \land \texttt{canTransform}(c_2, o_2) \land {} \\
+>   & \forall o_1, o_2 \in O : \texttt{isBasedOn}(o_2, o_1) \implies \exists c_1, c_2 \in C : \\
+>   & \texttt{canTransform}(c_1, o_1) \land \texttt{canTransform}(c_2, o_2) \land {} \\
 >   & \left\\{ \begin{aligned}
 >     {\scriptscriptstyle \texttt{(i) }} & c_1 = c_2 \lor {} \\
 >     {\scriptscriptstyle \texttt{(ii) }} & \texttt{enables}(c_1, c_2) \lor {} \\
->     {\scriptscriptstyle \texttt{(iii) }} & \exists s_1, s_2 \in S: \texttt{isPrincipalOf}(c_1, s_1) \land \texttt{isPrincipalOf}(c_2, s_2) \land \texttt{affects}(s_1, s_2)
+>     {\scriptscriptstyle \texttt{(iii) }} & ( \texttt{principal} \circ \texttt{affects} \circ \texttt{principal}^{-1} )(c_1, c_2)
 >   \end{aligned} \right.
 > \end{aligned}
 > $$
