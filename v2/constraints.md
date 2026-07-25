@@ -40,7 +40,7 @@ Furthermore:
 * Let $\texttt{isLeaf}(e)$ be defined as an element with no children: $\texttt{isLeaf}(e) \iff \neg \exists e' \in E: \texttt{isRefinedBy}(e, e')$.
 * Let $\texttt{isRoot}(e)$ be defined as an element with no parent: $\texttt{isRoot}(e) \iff \neg \exists e' \in E: \texttt{isRefinedBy}(e', e)$.
 * Let $\texttt{depth}(e)$ be a function that yields the total number of ancestors of $e$.
-* Let $\texttt{refines} \subseteq (C \times C) \cup (O \times O) \cup (S \times S)$ be a relation such that $(y, x) \in \texttt{refines} \iff (x, y) \in \texttt{isRefinedBy}$.
+* Let $\texttt{refines} \subseteq (C \times C) \cup (O \times O) \cup (S \times S)$ be a relation such that $(y, x) \in \texttt{refines} \leftrightarrow (x, y) \in \texttt{isRefinedBy}$.
 * Let $R^∗$ denote the reflexive transitive closure of a relation $R$, $R^+$ the transitive closure (one or more steps), and $R^?$ the reflexive closure (zero or one step).
 
 For a model $M$ to be COVO-compliant, the following constraints must hold:
@@ -54,7 +54,10 @@ These modeling constraints ensure that capabilities, objects and value streams a
 Each element has at most one parent. _Rationale:_ This ensures a single, unambiguous position for every element in the hierarchy.
 
 $$
-\forall e, p_1, p_2 \in E : \texttt{isRefinedBy}(p_1, e) \land \texttt{isRefinedBy}(p_2, e) \implies p_1 = p_2
+\begin{aligned}
+& \forall e, p_1, p_2 \in E : \texttt{isRefinedBy}(p_1, e) \land \texttt{isRefinedBy}(p_2, e) \\
+& \quad \rightarrow p_1 = p_2
+\end{aligned}
 $$
 
 ### C2. Acyclicity
@@ -70,7 +73,10 @@ $$
 All leaf elements (elements without children) must have the same number of ancestors. _Rationale:_ This prevents incomplete levels of detail, which create both structural gaps and semantic ambiguity. An unbalanced model leaves the meaning of its most detailed elements unclear, as their defining peer group is incomplete.
 
 $$
-\forall e_1, e_2 \in E : \texttt{isLeaf}(e_1) \land \texttt{isLeaf}(e_2) \implies \texttt{depth}(e_1) = \texttt{depth}(e_2)
+\begin{aligned}
+& \forall e_1, e_2 \in E : \texttt{isLeaf}(e_1) \land \texttt{isLeaf}(e_2) \\
+& \quad \rightarrow \texttt{depth}(e_1) = \texttt{depth}(e_2)
+\end{aligned}
 $$
 
 ### C4. Upward coherence
@@ -87,16 +93,16 @@ _Rationale:_ This ensures that low-level relationships are reflected at higher l
 
 $$
 \begin{aligned}
-  & \forall \texttt{h} \in H, e_1, e_2 : \texttt{h}(e_1, e_2) \land \neg \big( \texttt{isRoot}(e_1) \land \texttt{isRoot}(e_2) \big) \implies \\
-  & \exists p_1, p_2 \in E : \texttt{isRefinedBy}(p_1, e_1) \land \texttt{isRefinedBy}(p_2, e_2) \land {} \\
-  & \left\\{ \begin{aligned}
-    \mathclap{ \texttt{h}^?(p_1, p_2) \lor {} } \\
-    {\scriptscriptstyle \texttt{(1) }} & e_1, e_2 \in O \lor {} \\
-    {\scriptscriptstyle \texttt{(2) }} & (\texttt{principal} \circ \texttt{refines}^{\*} \circ \texttt{isRefinedBy}^{\*} \circ \texttt{principal}^{-1})(p_1, p_2) \lor {} \\
-    {\scriptscriptstyle \texttt{(3) }} & \texttt{h}(e_1, e_2) \in \texttt{isManifestedIn} \setminus \texttt{principal} \land \neg (\texttt{enables}^{\*} \circ \texttt{principal})(p_1, p_2) \lor {} \\
-    {\scriptscriptstyle \texttt{(4) }} & \texttt{enables}^{+}(p_2, p_1) \lor \texttt{affects}^{+}(p_2, p_1) \lor {} \\
-    {\scriptscriptstyle \texttt{(5) }} & (\texttt{affects} \circ \texttt{affects}^{+})(p_1, p_2)
-  \end{aligned} \right.
+& \forall \texttt{h} \in H, e_1, e_2 : \texttt{h}(e_1, e_2) \land \neg \big( \texttt{isRoot}(e_1) \land \texttt{isRoot}(e_2) \big) \\
+& \quad \rightarrow \exists p_1, p_2 \in E : \texttt{isRefinedBy}(p_1, e_1) \land \texttt{isRefinedBy}(p_2, e_2) \\
+& \quad \land \left\\{ \begin{aligned}
+  & \texttt{h}^?(p_1, p_2) \\
+  {\scriptscriptstyle \texttt{(1) }} & \lor \\; e_1, e_2 \in O \\
+  {\scriptscriptstyle \texttt{(2) }} & \lor \\; (\texttt{principal} \circ \texttt{refines}^{\*} \circ \texttt{isRefinedBy}^{\*} \circ \texttt{principal}^{-1})(p_1, p_2) \\
+  {\scriptscriptstyle \texttt{(3) }} & \lor \\; \texttt{h} \in \texttt{isManifestedIn} \setminus \texttt{principal} \land \neg (\texttt{enables}^{\*} \circ \texttt{principal})(p_1, p_2) \\
+  {\scriptscriptstyle \texttt{(4) }} & \lor \\; \texttt{enables}^{+}(p_2, p_1) \lor \texttt{affects}^{+}(p_2, p_1) \\
+  {\scriptscriptstyle \texttt{(5) }} & \lor \\; (\texttt{affects} \circ \texttt{affects}^{+})(p_1, p_2)
+\end{aligned} \right.
 \end{aligned}
 $$
 
@@ -106,8 +112,8 @@ A relationship between two parent elements requires that at least one pair of th
 
 $$
 \begin{aligned}
-& \forall \texttt{h} \in H, e_1, e_2 \in E : \texttt{h}(e_1, e_2) \land \neg \big( \texttt{isLeaf}(e_1) \land \texttt{isLeaf}(e_2) \big) \implies \\
-& ( \texttt{isRefinedBy} \circ \texttt{h} \circ \texttt{refines} )(e_1, e_2)
+& \forall \texttt{h} \in H, e_1, e_2 \in E : \texttt{h}(e_1, e_2) \land \neg \big( \texttt{isLeaf}(e_1) \land \texttt{isLeaf}(e_2) \big) \\
+& \quad \rightarrow \big( \texttt{isRefinedBy} \circ \texttt{h} \circ \texttt{refines} \big)(e_1, e_2)
 \end{aligned}
 $$
 
@@ -121,8 +127,8 @@ Each capability transforms exactly one object. _Exception:_ At the leaf-level, a
 
 $$
 \begin{aligned}
-& \forall c \in C : \exists! o \in O : \texttt{canTransform}(c, o) \lor {} \\
-& \big( \texttt{isLeaf}(c) \land \exists o \in O : \texttt{canTransform}(c, o) \big)
+& \forall c \in C : \exists! o \in O : \texttt{canTransform}(c, o) \\
+& \quad \lor \\; \big( \texttt{isLeaf}(c) \land \exists o \in O : \texttt{canTransform}(c, o) \big)
 \end{aligned}
 $$
 
@@ -132,8 +138,8 @@ Each object must be transformed by exactly one capability. _Exception:_ At the l
 
 $$
 \begin{aligned}
-& \forall o \in O : \exists! c \in C : \texttt{canTransform}(c, o) \lor {} \\
-& \big( \texttt{isLeaf}(o) \land \exists c \in C : \texttt{canTransform}(c, o) \big)
+& \forall o \in O : \exists! c \in C : \texttt{canTransform}(c, o) \\
+& \quad \lor \\; \big( \texttt{isLeaf}(o) \land \exists c \in C : \texttt{canTransform}(c, o) \big)
 \end{aligned}
 $$
 
@@ -159,8 +165,8 @@ Each capability may manifest only once per top-level value stream as a principal
 
 $$
 \begin{aligned}  
-& \forall c \in C, s \in S : \texttt{principal}(c, s_1) \land \texttt{principal}(c, s_2) \land s_1 \neq s_2 \implies \\
-& \neg ( \texttt{refines}^{\*} \circ \texttt{isRefinedBy}^{\*} )(s_1, s_2) \lor \texttt{isLeaf}(c)  
+& \forall c \in C, s \in S : \texttt{principal}(c, s_1) \land \texttt{principal}(c, s_2) \land s_1 \neq s_2 \\
+& \quad \rightarrow \\; \neg \big( \texttt{refines}^{\*} \circ \texttt{isRefinedBy}^{\*} \big)(s_1, s_2) \lor \texttt{isLeaf}(c)  
 \end{aligned}
 $$
 
@@ -174,8 +180,8 @@ Each _affects_ relationship between two value stream stages must have an _is bas
 
 $$
 \begin{aligned}
-& \forall s_1, s_2 \in S : \texttt{affects}(s_1, s_2) \implies \\
-& ( \texttt{principal}^{-1} \circ \texttt{canTransform} \circ \texttt{isBasedOn}^? \circ \texttt{canTransform}^{-1} \circ \texttt{principal} )(s_2, s_1)
+& \forall s_1, s_2 \in S : \texttt{affects}(s_1, s_2) \\
+& \quad \rightarrow \big( \texttt{principal}^{-1} \circ \texttt{canTransform} \circ \texttt{isBasedOn}^? \circ \texttt{canTransform}^{-1} \circ \texttt{principal} \big)(s_2, s_1)
 \end{aligned}
 $$
 
@@ -185,19 +191,19 @@ Each _enables_ relationship between two capabilities must have a corresponding _
 
 $$
 \begin{aligned}
-& \forall c_1, c_2 \in C : \texttt{enables}(c_1, c_2) \implies \\
-& ( \texttt{canTransform} \circ \texttt{isBasedOn}^? \circ \texttt{canTransform}^{-1} )(c_2, c_1)
+& \forall c_1, c_2 \in C : \texttt{enables}(c_1, c_2) \\
+& \quad \rightarrow \big( \texttt{canTransform} \circ \texttt{isBasedOn}^? \circ \texttt{canTransform}^{-1} \big)(c_2, c_1)
 \end{aligned}
 $$
 
 ## C13. Justified object dependencies
 
-An _is based on_ relationship between two objects is only permitted if it is justified by one of the following conditions: (i) the objects are transformed by the same capability, (ii) the objects are transformed by capabilities with an _enables_ relationship (per C12), or (iii) the objects are transformed by the principal capabilities of value stream stages with an _affects_ relationship (per C11). _Rationale:_ While C11 and C12 prevent ungrounded behavioral dependencies, C13 ensures the reverse: that no object dependency is ignored by the behavioral design.
+An _is based on_ relationship between two objects is only permitted if it is justified by one of the following conditions: (i) the objects are transformed by capabilities with an _enables_ relationship (if distinct, per C12), or (ii) the objects are transformed by the principal capabilities of value stream stages with an _affects_ relationship (per C11). _Rationale:_ While C11 and C12 prevent ungrounded behavioral dependencies, C13 ensures the reverse: that no object dependency is ignored by the behavioral design.
 
 $$
 \begin{aligned}
-& \forall o_1, o_2 \in O : \texttt{isBasedOn}(o_1, o_2) \implies \\
-& ( \texttt{canTransform}^{-1} \circ \texttt{enables}^? \circ \texttt{canTransform} )(o_2, o_1) \lor {} \\
-& ( \texttt{canTransform}^{-1} \circ \texttt{principal} \circ \texttt{affects} \circ \texttt{principal}^{-1} \circ \texttt{canTransform} )(o_2, o_1)
+& \forall o_1, o_2 \in O : \texttt{isBasedOn}(o_1, o_2) \\
+& \quad \rightarrow \big( \texttt{canTransform}^{-1} \circ \texttt{enables}^? \circ \texttt{canTransform} \big)(o_2, o_1) \\
+& \quad \lor \\; \big( \texttt{canTransform}^{-1} \circ \texttt{principal} \circ \texttt{affects} \circ \texttt{principal}^{-1} \circ \texttt{canTransform} \big)(o_2, o_1)
 \end{aligned}
 $$
