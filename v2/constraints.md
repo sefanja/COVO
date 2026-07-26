@@ -97,11 +97,11 @@ $$
 & \quad \rightarrow \exists p_1, p_2 \in E : \texttt{isRefinedBy}(p_1, e_1) \land \texttt{isRefinedBy}(p_2, e_2) \\
 & \quad \land \left\\{ \begin{aligned}
   & \texttt{h}^?(p_1, p_2) \\
-  {\scriptscriptstyle \texttt{(1) }} & \lor \\; e_1, e_2 \in O \\
-  {\scriptscriptstyle \texttt{(2) }} & \lor \\; \big( \texttt{principal} \circ \texttt{refines}^{\*} \circ \texttt{isRefinedBy}^{\*} \circ \texttt{principal}^{-1} \big)(p_1, p_2) \\
-  {\scriptscriptstyle \texttt{(3) }} & \lor \\; \texttt{h} \in \texttt{isManifestedIn} \setminus \texttt{principal} \land \neg \big( \texttt{enables}^{\*} \circ \texttt{principal} \big)(p_1, p_2) \\
-  {\scriptscriptstyle \texttt{(4) }} & \lor \\; \texttt{enables}^{+}(p_2, p_1) \lor \texttt{affects}^{+}(p_2, p_1) \\
-  {\scriptscriptstyle \texttt{(5) }} & \lor \\; \big( \texttt{affects} \circ \texttt{affects}^{+} \big)(p_1, p_2)
+  {\scriptscriptstyle \texttt{(1) }} & \lor \\, e_1, e_2 \in O \\
+  {\scriptscriptstyle \texttt{(2) }} & \lor \\, \big( \texttt{principal} \circ \texttt{refines}^{\*} \circ \texttt{isRefinedBy}^{\*} \circ \texttt{principal}^{-1} \big)(p_1, p_2) \\
+  {\scriptscriptstyle \texttt{(3) }} & \lor \\, \texttt{h} \in \texttt{isManifestedIn} \setminus \texttt{principal} \land \neg \big( \texttt{enables}^{\*} \circ \texttt{principal} \big)(p_1, p_2) \\
+  {\scriptscriptstyle \texttt{(4) }} & \lor \\, \texttt{enables}^{+}(p_2, p_1) \lor \texttt{affects}^{+}(p_2, p_1) \\
+  {\scriptscriptstyle \texttt{(5) }} & \lor \\, \big( \texttt{affects} \circ \texttt{affects}^{+} \big)(p_1, p_2)
 \end{aligned} \right.
 \end{aligned}
 $$
@@ -128,7 +128,7 @@ Each capability transforms exactly one object. _Exception:_ At the leaf-level, a
 $$
 \begin{aligned}
 & \forall c \in C : \exists! o \in O : \texttt{canTransform}(c, o) \\
-& \quad \lor \\; \big( \texttt{isLeaf}(c) \land \exists o \in O : \texttt{canTransform}(c, o) \big)
+& \quad \lor \\, \big( \texttt{isLeaf}(c) \land \exists o \in O : \texttt{canTransform}(c, o) \big)
 \end{aligned}
 $$
 
@@ -138,8 +138,8 @@ Each object must be transformed by exactly one capability. _Exception:_ At the l
 
 $$
 \begin{aligned}
-& \forall o \in O : \exists! c \in C : \texttt{canTransform}(c, o) \\
-& \quad \lor \\; \big( \texttt{isLeaf}(o) \land \exists c \in C : \texttt{canTransform}(c, o) \big)
+& \forall o \in O \\; \exists! c \in C : \texttt{canTransform}(c, o) \\
+& \quad \lor \\, \big( \texttt{isLeaf}(o) \land \exists c \in C : \texttt{canTransform}(c, o) \big)
 \end{aligned}
 $$
 
@@ -166,7 +166,7 @@ Each capability may manifest only once per top-level value stream as a principal
 $$
 \begin{aligned}  
 & \forall c \in C, s \in S : \texttt{principal}(c, s_1) \land \texttt{principal}(c, s_2) \land s_1 \neq s_2 \\
-& \quad \rightarrow \\; \neg \big( \texttt{refines}^{\*} \circ \texttt{isRefinedBy}^{\*} \big)(s_1, s_2) \lor \texttt{isLeaf}(c)  
+& \quad \rightarrow \\, \neg \big( \texttt{refines}^{\*} \circ \texttt{isRefinedBy}^{\*} \big)(s_1, s_2) \lor \texttt{isLeaf}(c)  
 \end{aligned}
 $$
 
@@ -204,6 +204,6 @@ $$
 \begin{aligned}
 & \forall o_1, o_2 \in O : \texttt{isBasedOn}(o_1, o_2) \\
 & \quad \rightarrow \big( \texttt{canTransform}^{-1} \circ \texttt{enables}^? \circ \texttt{canTransform} \big)(o_2, o_1) \\
-& \quad \lor \\; \big( \texttt{canTransform}^{-1} \circ \texttt{principal} \circ \texttt{affects} \circ \texttt{principal}^{-1} \circ \texttt{canTransform} \big)(o_2, o_1)
+& \quad \lor \\, \big( \texttt{canTransform}^{-1} \circ \texttt{principal} \circ \texttt{affects} \circ \texttt{principal}^{-1} \circ \texttt{canTransform} \big)(o_2, o_1)
 \end{aligned}
 $$
