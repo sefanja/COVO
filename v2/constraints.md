@@ -40,7 +40,7 @@ Furthermore:
 * Let $\texttt{isLeaf}(e)$ be defined as an element with no children: $\texttt{isLeaf}(e) \iff \neg \exists e' \in E: \texttt{isRefinedBy}(e, e')$.
 * Let $\texttt{isRoot}(e)$ be defined as an element with no parent: $\texttt{isRoot}(e) \iff \neg \exists e' \in E: \texttt{isRefinedBy}(e', e)$.
 * Let $\texttt{depth}(e)$ be a function that yields the total number of ancestors of $e$.
-* Let $\texttt{refines} \subseteq (C \times C) \cup (O \times O) \cup (S \times S)$ be a relation such that $(y, x) \in \texttt{refines} \leftrightarrow (x, y) \in \texttt{isRefinedBy}$.
+* Let $\texttt{refines} = \texttt{isRefinedBy}^{-1}$ denote the inverse relation of $\texttt{isRefinedBy}$.
 * Let $R^∗$ denote the reflexive transitive closure of a relation $R$, $R^+$ the transitive closure (one or more steps), and $R^?$ the reflexive closure (zero or one step).
 
 For a model $M$ to be COVO-compliant, the following constraints must hold:
@@ -98,10 +98,10 @@ $$
 & \quad \land \left\\{ \begin{aligned}
   & \texttt{h}^?(p_1, p_2) \\
   {\scriptscriptstyle \texttt{(1) }} & \lor \\; e_1, e_2 \in O \\
-  {\scriptscriptstyle \texttt{(2) }} & \lor \\; (\texttt{principal} \circ \texttt{refines}^{\*} \circ \texttt{isRefinedBy}^{\*} \circ \texttt{principal}^{-1})(p_1, p_2) \\
-  {\scriptscriptstyle \texttt{(3) }} & \lor \\; \texttt{h} \in \texttt{isManifestedIn} \setminus \texttt{principal} \land \neg (\texttt{enables}^{\*} \circ \texttt{principal})(p_1, p_2) \\
+  {\scriptscriptstyle \texttt{(2) }} & \lor \\; \big( \texttt{principal} \circ \texttt{refines}^{\*} \circ \texttt{isRefinedBy}^{\*} \circ \texttt{principal}^{-1} \big)(p_1, p_2) \\
+  {\scriptscriptstyle \texttt{(3) }} & \lor \\; \texttt{h} \in \texttt{isManifestedIn} \setminus \texttt{principal} \land \neg \big( \texttt{enables}^{\*} \circ \texttt{principal} \big)(p_1, p_2) \\
   {\scriptscriptstyle \texttt{(4) }} & \lor \\; \texttt{enables}^{+}(p_2, p_1) \lor \texttt{affects}^{+}(p_2, p_1) \\
-  {\scriptscriptstyle \texttt{(5) }} & \lor \\; (\texttt{affects} \circ \texttt{affects}^{+})(p_1, p_2)
+  {\scriptscriptstyle \texttt{(5) }} & \lor \\; \big( \texttt{affects} \circ \texttt{affects}^{+} \big)(p_1, p_2)
 \end{aligned} \right.
 \end{aligned}
 $$
