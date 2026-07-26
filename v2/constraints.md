@@ -37,8 +37,8 @@ We represent a business capability model $M$ as a relational structure $M = (E, 
 
 Furthermore:
 
-* Let $\texttt{isLeaf}(e)$ be defined as an element with no children: $\texttt{isLeaf}(e) \iff \neg \exists e' \in E: \texttt{isRefinedBy}(e, e')$.
-* Let $\texttt{isRoot}(e)$ be defined as an element with no parent: $\texttt{isRoot}(e) \iff \neg \exists e' \in E: \texttt{isRefinedBy}(e', e)$.
+* Let $\texttt{isLeaf}(e)$ be defined as an element with no children: $\texttt{isLeaf}(e) \leftrightarrow \neg \exists e' \in E: \texttt{isRefinedBy}(e, e')$.
+* Let $\texttt{isRoot}(e)$ be defined as an element with no parent: $\texttt{isRoot}(e) \leftrightarrow \neg \exists e' \in E: \texttt{isRefinedBy}(e', e)$.
 * Let $\texttt{depth}(e)$ be a function that yields the total number of ancestors of $e$.
 * Let $\texttt{refines} = \texttt{isRefinedBy}^{-1}$ denote the inverse relation of $\texttt{isRefinedBy}$.
 * Let $R^∗$ denote the reflexive transitive closure of a relation $R$, $R^+$ the transitive closure (one or more steps), and $R^?$ the reflexive closure (zero or one step).
