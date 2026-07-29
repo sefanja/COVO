@@ -94,8 +94,8 @@ _Rationale:_ This ensures that low-level relationships are reflected at higher l
 $$
 \begin{aligned}
 & \forall \texttt{h} \in H, e_1, e_2 : \texttt{h}(e_1, e_2) \land \neg \big( \texttt{isRoot}(e_1) \land \texttt{isRoot}(e_2) \big) \\
-& \quad \rightarrow \exists p_1, p_2 \in E : \texttt{isRefinedBy}(p_1, e_1) \land \texttt{isRefinedBy}(p_2, e_2) \\
-& \quad \land \left\\{ \begin{aligned}
+& \quad \rightarrow \exists p_1, p_2 \in E : \texttt{isRefinedBy}(p_1, e_1) \land \texttt{isRefinedBy}(p_2, e_2) \land {} \\
+& \quad \left\\{ \begin{aligned}
   & \texttt{h}^?(p_1, p_2) \\
   {\scriptscriptstyle \texttt{(1) }} & \lor \\, e_1, e_2 \in O \\
   {\scriptscriptstyle \texttt{(2) }} & \lor \\, \big( \texttt{principal} \circ \texttt{refines}^{\*} \circ \texttt{isRefinedBy}^{\*} \circ \texttt{principal}^{-1} \big)(p_1, p_2) \\
